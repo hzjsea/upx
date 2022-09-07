@@ -33,6 +33,7 @@ type Session struct {
 	Operator string `json:"username"`
 	Password string `json:"password"`
 	CWD      string `json:"cwd"`
+	Host     string `json:"host"`
 
 	updriver *upyun.UpYun
 	color    bool
@@ -146,12 +147,18 @@ func (sess *Session) FormatUpInfo(upInfo *upyun.FileInfo) string {
 
 func (sess *Session) Init() error {
 	sess.scores = make(map[int]int)
+	hosts := make(map[string]string)
+	if sess.Host != "" {
+		hosts["v0.api.upyun.com"] = sess.Host
+	}
 	sess.updriver = upyun.NewUpYun(&upyun.UpYunConfig{
 		Bucket:    sess.Bucket,
 		Operator:  sess.Operator,
 		Password:  sess.Password,
+		Hosts:     hosts,
 		UserAgent: fmt.Sprintf("upx/%s", VERSION),
 	})
+	fmt.Println(sess)
 	_, err := sess.updriver.Usage()
 	return err
 }

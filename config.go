@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -178,4 +179,33 @@ func hashEncode(s string) string {
 		}
 	}
 	return string(r)
+}
+
+type User struct {
+	Bucket   string `json:"bucket"`
+	Operator string `json:"username"`
+	Password string `json:"password"`
+	Host     string `json:"host"`
+}
+
+type OperatorConfig struct {
+	User map[string]User
+}
+
+func ConfigFromFile(fpath string, group string) {
+	var config OperatorConfig
+	var user User
+	if _, err := toml.DecodeFile(fpath, &config); err != nil {
+		PrintErrorAndExit("decode config file err, %s", err)
+	}
+	if group == "" {
+		user = config.User["default"]
+	} else {
+		user = config.User[group]
+	}
+	session = &Session{CWD: "/"}
+	session.Password = user.Password
+	session.Operator = user.Operator
+	session.Bucket = user.Bucket
+	session.Host = user.Host
 }

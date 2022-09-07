@@ -96,6 +96,45 @@ docker run --rm upx upx -v
 | --auth value   | auth 字符串 |
 | --help, -h     | 显示帮助信息 |
 | --version, -v  | 显示版本号 |
+|  --cofnig, -f | 指定用户配置|
+
+### 指定用户配置
+
+> 通过指定--config 或者 -f 指定用户配置， 用户配置模版如下
+
+```toml
+[user]
+[user.default]
+Bucket=""
+Operator=""
+Password=""
+
+[user.member1]
+Bucket=""
+Operator=""
+Password=""
+
+[user.member2]
+Bucket=""
+Operator=""
+Password=""
+
+[user.intranet]
+Bucket=""
+Operator=""
+Password=""
+Host=""
+
+```
+在调用命令时指定配置文件，则不再需要登陆后再进行需要权限验证的操作
+该方式仅临时操作, 因此不会保存任何临时信息，比如当你通过upx移动到根目录下的某一个目录，下次依旧会在根目录
+示例如下
+通过指定user的方式获取空间信息
+```bash
+go run . --config {config_file},{user} info
+// 指定member1获取空间信息
+go run . --config /Users/hzjsea/hzjsea/upyun.com/upx/config/config.toml,member info
+```
 
 
 ### 列目录 `ls`

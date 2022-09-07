@@ -3,6 +3,7 @@ module github.com/upyun/upx
 go 1.13
 
 require (
+	github.com/BurntSushi/toml v0.3.1
 	github.com/fatih/color v1.9.0
 	github.com/gosuri/uilive v0.0.4 // indirect
 	github.com/gosuri/uiprogress v0.0.1
@@ -13,4 +14,5 @@ require (
 	github.com/upyun/go-sdk/v3 v3.0.2
 	github.com/urfave/cli v1.22.4
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899 // indirect
+	golang.org/x/sys v0.0.0-20220906165534-d0df966e6959 // indirect
 )

@@ -23,6 +23,10 @@ func Init(login bool) {
 }
 
 func InitAndCheck(login, check bool, c *cli.Context) {
+	if session != nil {
+		session.Init()
+		return
+	}
 	if login == LOGIN && session == nil {
 		readConfigFromFile(LOGIN)
 	}
@@ -43,7 +47,7 @@ func NewLoginCommand() cli.Command {
 			Init(NO_LOGIN)
 			session = &Session{CWD: "/"}
 			args := c.Args()
-			if len(args) == 3 {
+			if len(args) == 3 || session.Operator != "" {
 				session.Bucket = args.Get(0)
 				session.Operator = args.Get(1)
 				session.Password = args.Get(2)

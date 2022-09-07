@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/urfave/cli"
@@ -28,6 +29,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{Name: "quiet, q", Usage: "not verbose"},
 		cli.StringFlag{Name: "auth", Usage: "auth string"},
+		cli.StringFlag{Name: "config, f", Usage: "Set User Config"},
 	}
 	app.Before = func(c *cli.Context) error {
 		if c.Bool("q") {
@@ -38,6 +40,19 @@ func main() {
 			if err != nil {
 				PrintErrorAndExit("%s: invalid auth string", c.Command.FullName())
 			}
+		}
+		if c.String("f") != "" {
+			var group, fpath string
+			fpathSlice := strings.Split(c.String("f"), ",")
+			fpath = fpathSlice[0]
+			if len(fpathSlice) == 2 {
+				group = fpathSlice[1]
+			}
+			if _, err := os.Stat(fpath); err != nil {
+				PrintErrorAndExit("%s: file path ", err)
+			}
+
+			ConfigFromFile(fpath, group)
 		}
 		return nil
 	}
